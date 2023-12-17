@@ -28,6 +28,7 @@ set shiftwidth=8
 set textwidth=80
 set wrap
 set wildmenu
+set encoding=utf-8
 
 filetype plugin indent on
 syntax enable
