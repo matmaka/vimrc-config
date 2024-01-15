@@ -1,11 +1,25 @@
-if v:version >= 900
-    let &wildoptions="pum"
+" install plugin manager
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+
+call plug#begin()
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'lervag/vimtex'
+Plug 'mxw/vim-jsx'
+Plug 'scrooloose/nerdcommenter'
+Plug 'valloric/youcompleteme'
+Plug 'vim-airline/vim-airline'
+Plug 'wakatime/vim-wakatime'
+call plug#end()
+
+let mapleader = '\<Space>'
 
 filetype plugin indent on
 syntax enable
-
-let mapleader = "\<Space>"
 
 set encoding=utf-8
 set expandtab
@@ -15,46 +29,65 @@ set textwidth=80
 set wildmenu
 set wrap
 
-autocmd FileType css,scss,sass,html set shiftwidth=4
-autocmd FileType css,scss,sass,html set tabstop=4
-        
-vnoremap z "+y
+autocmd FileType css,scss,sass,html,javascript,xml set shiftwidth=4
+autocmd FileType css,scss,sass,html,javascript,xml set tabstop=4
+autocmd FileType javascript,typescript iabbrev ;f function
+autocmd FileType javascript,typescript iabbrev vc const
+autocmd FileType javascript,typescript iabbrev vl let
+autocmd FileType javascript,typescript iabbrev vv var
+autocmd FileType vim set shiftwidth=2
+autocmd FileType vim set tabstop=2
 
-nnoremap - :m -2 <ENTER>
-nnoremap = :m +1 <ENTER>
+inoremap <c-d> <esc>ddi
+inoremap <esc> <nop>
+inoremap jk <esc>
+inoremap q" <esc>bi"<esc>ea"
+
+nnoremap - dd
 nnoremap <c-u> <esc>bveU
-nnoremap \ dd
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-nnoremap <leader>tc :VimtexCompile<cr>
+nnoremap <leader>' viw<esc>a'<esc>bi'<esc>lel
+nnoremap <leader>' viw<esc>a'<esc>bi'<esc>lel
 nnoremap <leader>e3 :vsplit $HOME/.config/i3/config<cr>
 nnoremap <leader>ea :vsplit $HOME/.aliases<cr>
 nnoremap <leader>eb :vsplit $HOME/.bashrc<cr>
-nnoremap <leader>ez :vsplit $HOME/.zshrc<cr>
-nnoremap <leader>eq :vsplit $HOME/.config/qutebrowser/config.py<cr>
 nnoremap <leader>ef :vsplit $HOME/.config/vifm/vifmrc<cr>
+nnoremap <leader>eq :vsplit $HOME/.config/qutebrowser/config.py<cr>
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>ez :vsplit $HOME/.zshrc<cr>
 nnoremap <leader>rv :source $MYVIMRC<cr>
-nnoremap <leader>" viw<esc>a"<esc>bi"<esc>lel
-nnoremap <leader>' viw<esc>a'<esc>bi'<esc>lel
+nnoremap <leader>tc :VimtexCompile<cr>
 nnoremap H ^
 nnoremap L $
-vnoremap <leader>" xi"<esc>pa"<esc>h
-inoremap <esc> <nop>
-inoremap jk <esc>
+nnoremap _ ddkP
+nnoremap + ddp
 
-inoremap <c-d> <esc>ddi
-inoremap <c-k> <esc>lki
-inoremap <c-j> <esc>lji
-inoremap <c-h> <esc>lhi
-inoremap <c-l> <esc>lli
+vnoremap <leader>' xi'<esc>pa'<esc>h
 
-iabbrev teh the
-iabbrev taht that
-iabbrev jsut just
-iabbrev abd and
-iabbrev woudl would
-iabbrev nwo now
-iabbrev rnadom random
-iabbrev ccopy Copyright 2023 MatMaka, all rights reserved.
-iabbrev jf function
-iabbrev jp () {<cr>};jkO<tab><bs>
-iabbrev l( console.log();jkhh
+" vim-airline
+let g:airline#extensions#tabline#enabled = 1
+
+" ultisnips
+let g:UltiSnipsExpandTrigger="<c-s>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsJumpForwardTrigger='<c-m>'
+let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+
+" vimtex
+let g:tex_flavor='latex'
+let g:vimtex_quickfix_mode=0
+let g:vimtex_view_method='zathura'
+
+" youcompleteme
+let g:ycm_language_server =
+  \ [
+  \   {
+  \     'name': 'texlab',
+  \     'cmdline': [ 'texlab' ],
+  \     'filetypes': [ 'tex' ]
+  \   },
+  \   {
+  \     'name': 'vim-language-server',
+  \     'cmdline': [ 'vim-language-server', '--stdio' ],
+  \     'filetypes': [ 'vim' ]
+  \   },
+  \ ]
